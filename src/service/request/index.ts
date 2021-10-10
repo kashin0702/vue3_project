@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type { RequestConfig, RequestInterceptors } from './type'
 import { ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 // 导入loading的类型
 import type { ILoadingInstance } from 'element-plus/lib/components/loading/src/loading.type'
 // 通过类来封装请求接口，因为类具有更好的封装性
@@ -11,7 +12,7 @@ class Http {
   loading?: ILoadingInstance
   showLoading: boolean
 
-  // 扩展config类型RequestConfig
+  // 扩展入参config类型RequestConfig
   constructor(config: RequestConfig) {
     //构造创建实例的方法，通过axios.create方法创建，并传入config
     this.instance = axios.create(config)
@@ -35,7 +36,7 @@ class Http {
         // 根据传入的showLoading字段动态配置是否显示加载动画
         if (this.showLoading) {
           this.loading = ElLoading.service({
-            lock: true,
+            lock: true, // 锁定屏幕滚动
             text: '正在请求数据',
             background: 'rgba(0,0,0,0.3)'
           })
@@ -50,17 +51,41 @@ class Http {
       (res) => {
         // 将loading移除
         this.loading?.close()
-        const data = res.data
-        if (data.returnCode === '-1001') {
-          console.log('请求失败，错误信息')
-        } else {
+        console.log('响应对象:', res)
+        const { status, data } = res
+        // 1.status==200，根据接口状态码判断各种情况
+        if (status === 200) {
+          if (data.code === '-1001') {
+            console.log('未登录请求失败，错误信息')
+            ElMessage({
+              type: 'error',
+              message: '用户未登录'
+            })
+            return Promise.reject(res)
+          }
+          // 非正确请求的状态码
+          if (data.code !== 0) {
+            ElMessage({
+              type: 'error',
+              message: res.data.message
+            })
+            return Promise.reject(res)
+          }
           return data
+        } else {
+          // 响应成功，但status !== 200的情况
+          ElMessage({
+            type: 'error',
+            message: `请求失败:${status}`
+          })
         }
       },
       (err) => {
-        // 请求失败也将loading移除
+        // 响应失败也将loading移除
         this.loading?.close()
-        if (err.response.status === 404) {
+        console.log('错误对象', err)
+        const { status, statusText } = err.response
+        if (status === 404) {
           console.log('404错误')
         }
         return err

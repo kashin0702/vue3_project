@@ -35,8 +35,13 @@ import { setupStore } from './store'
 //   })
 const app = createApp(App)
 app.use(store)
+
+/**
+ * 页面每次初始化调用这个方法setupStore()
+ * 该方法必须放在use(router)前执行 否则刷新页面会跳到notFound
+ **/
+setupStore()
 app.use(router)
 app.use(ElementPlus)
 app.mount('#app')
-// 每次初始化调用这个方法
-setupStore()
+

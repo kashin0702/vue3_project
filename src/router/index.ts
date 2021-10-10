@@ -20,12 +20,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/main',
     name: 'Main',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // // which is lazy-loaded when the route is visited.
-    // component: () =>
-    //   import(/* webpackChunkName: "about" */ '../views/About.vue')
     component: () => import('../views/main/Main.vue')
+    // children: [] 这个不能写死，要根据返回的menus动态生成
+  },
+  // 创建一个notfound页面路由， 防止用户随意输入url时找不到页面
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: () => import('../views/not-found/notFound.vue')
   }
 ]
 
