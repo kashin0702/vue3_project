@@ -1,4 +1,5 @@
 import { LoginState } from './login/types'
+import { SystemState } from './main/system/types'
 
 export interface RootState {
   name: string
@@ -9,6 +10,7 @@ export interface RootState {
 export interface RootWithModule {
   // 登录模块
   login: LoginState
+  systemModule: SystemState
 }
 
 // 交叉类型

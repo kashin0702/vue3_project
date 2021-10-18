@@ -7,4 +7,12 @@ export interface FormItem {
   placeholder?: any
   options?: any[]
   otherOptions?: any
+  field?: any
+}
+
+export interface Form {
+  formItems: FormItem[]
+  labelWidth?: string
+  colLayout?: any
+  itemStyle?: any
 }

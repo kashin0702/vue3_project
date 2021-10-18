@@ -10,6 +10,7 @@ import 'normalize.css'
 import './assets/css/index.less'
 
 import { setupStore } from './store'
+import { globalRegitser } from './global'
 
 // console.log('我是Baseurl111', BASE_URL)
 
@@ -34,14 +35,16 @@ import { setupStore } from './store'
 //     console.log(res.returnCode)
 //   })
 const app = createApp(App)
-app.use(store)
 
+// 注册过滤方法 $filters
+app.use(globalRegitser)
+
+app.use(store)
 /**
  * 页面每次初始化调用这个方法setupStore()
- * 该方法必须放在use(router)前执行 否则刷新页面会跳到notFound
+ * setupStore()必须放在use(router)前执行 否则刷新页面会跳到notFound
  **/
 setupStore()
 app.use(router)
 app.use(ElementPlus)
 app.mount('#app')
-

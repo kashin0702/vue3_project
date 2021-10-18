@@ -39,7 +39,7 @@ export default defineComponent({
     let currentTab = ref('account')
     // 记住密码
     let isKeepPwd = ref(false)
-    // 固定语法 定义对象实例的类型
+    // 固定语法 定义组件对象实例的类型
     const accountRef = ref<InstanceType<typeof loginAccount>>()
 
     const handlerLoginClick = () => {

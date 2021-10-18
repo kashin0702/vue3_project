@@ -30,7 +30,7 @@ class Http {
       this.interceptors?.responseInterceptorCatch
     )
 
-    // 全局拦截器
+    // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
         // 根据传入的showLoading字段动态配置是否显示加载动画
@@ -47,6 +47,7 @@ class Http {
         return err
       }
     )
+    // 全局响应拦截器
     this.instance.interceptors.response.use(
       (res) => {
         // 将loading移除
@@ -93,7 +94,7 @@ class Http {
     )
   }
   // 封装请求方法
-  request<T>(config: RequestConfig<T>): Promise<T> {
+  request<T = any>(config: RequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 单独请求拦截器处理
       if (config.interceptors?.requestInterceptor) {
@@ -123,15 +124,15 @@ class Http {
     })
   }
 
-  get<T>(config: RequestConfig<T>): Promise<T> {
+  get<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: RequestConfig<T>): Promise<T> {
+  post<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' })
   }
 
-  delete<T>(config: RequestConfig<T>): Promise<T> {
+  delete<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
 }

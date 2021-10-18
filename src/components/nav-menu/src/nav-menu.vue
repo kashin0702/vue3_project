@@ -4,7 +4,13 @@
       <img src="~@/assets/img/logo.svg" />
       <span class="title" v-if="!collapse">Vue3+TS</span>
     </div>
-    <el-menu :collapse="collapse">
+    <el-menu
+      :collapse="collapse"
+      background-color="#0c2135"
+      text-color="#b7bdc3"
+      active-text-color="#0a60bd"
+      :default-active="defaultActive"
+    >
       <template v-for="item in userMenus" :key="item.id">
         <!-- type === 1 表示有二级菜单 -->
         <template v-if="item.type === 1">
@@ -15,7 +21,7 @@
               <span>{{ item.name }}</span>
             </template>
             <template v-for="subitem in item.children" :key="subitem.id">
-              <!-- 监听路由点击goUrl -->
+              <!-- 监听路由点击goUrl  菜单的index绑定id-->
               <el-menu-item :index="subitem.id + ''" @click="goUrl(subitem)">
                 <i v-if="subitem.icon" :class="subitem.icon"></i>
                 <span>{{ subitem.name }}</span>
@@ -36,10 +42,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 // 这里用的useStore是自己封装的，保证类型正确
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { pathToMenu } from '@/utils/mapRoutes'
 export default defineComponent({
   props: {
     collapse: {
@@ -54,6 +61,16 @@ export default defineComponent({
       return store.state.login.userMenus
     })
 
+    // 刷新时保存之前点击的菜单
+    // 思路：拿到当前页面的路径，和useMenus进行比对
+    // 当userMenus.url === path时 返回这个menu 即是当前的页面
+    const route = useRoute()
+    const currentPath = route.path
+    const menu = pathToMenu(userMenus.value, currentPath)
+    // 保存符合条件的页面id
+    const defaultActive = ref(menu.id + '')
+
+    // 路由跳转
     const goUrl = (item: any) => {
       console.log(item)
       router.push({
@@ -62,6 +79,8 @@ export default defineComponent({
     }
     return {
       userMenus,
+      // 点击的菜单id
+      defaultActive,
       goUrl
     }
   }

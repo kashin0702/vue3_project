@@ -1,4 +1,5 @@
 import localCache from '@/utils/localCache'
+import { firstMenu } from '@/utils/mapRoutes'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // import Home from '../views/Home.vue'
 import Login from '../views/login/Login.vue'
@@ -43,6 +44,10 @@ router.beforeEach((to) => {
     if (!token) {
       return '/login'
     }
+  }
+  // 跳转main页时 直接定位到第一个路由页面
+  if (to.path === '/main') {
+    return firstMenu.url
   }
 })
 export default router

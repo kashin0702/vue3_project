@@ -3,7 +3,7 @@
     <el-container class="main-content">
       <!-- 动态绑定宽度 -->
       <el-aside :width="isCollapse ? '60px' : '220px'">
-        <!-- menu也要这个属性 -->
+        <!-- menu也要这个属性 用于隐藏标题 -->
         <nav-menu :collapse="isCollapse"></nav-menu>
       </el-aside>
       <el-container class="page">

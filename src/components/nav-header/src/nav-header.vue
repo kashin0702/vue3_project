@@ -12,22 +12,28 @@
     </div>
     <!-- 面包屑 & 用户头像 -->
     <div class="content">
-      <div>面包屑</div>
+      <pro-breadcrumb :breadcrumbs="breadcrumbs"></pro-breadcrumb>
       <user-info></user-info>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { DArrowLeft } from '@element-plus/icons'
 import { DArrowRight } from '@element-plus/icons'
 import userInfo from './user-info.vue'
+import { ProBreadcrumb } from '@/base-ui/breadcrumb'
+import { useStore } from '@/store'
+import { useRoute } from 'vue-router'
+// 路径转化为面包屑数组的方法
+import { pathToBreadcrumb } from '@/utils/mapRoutes'
 export default defineComponent({
   components: {
     DArrowLeft,
     DArrowRight,
-    userInfo
+    userInfo,
+    ProBreadcrumb
   },
   // 发送自定义事件出去
   emits: ['foldChange'],
@@ -39,7 +45,22 @@ export default defineComponent({
       emit('foldChange', isFold.value)
     }
 
+    const store = useStore()
+    // const route = useRoute()
+    // const userMenus = store.state.login.userMenus
+    // const currentPath = route.path
+    // const breadcrumbs = pathToBreadcrumb(userMenus, currentPath)
+    
+    // 面包屑相关依赖数据都放入计算属性中 变成响应式对象
+    const breadcrumbs = computed(() => {
+      const route = useRoute()
+      const userMenus = store.state.login.userMenus
+      const currentPath = route.path
+      return pathToBreadcrumb(userMenus, currentPath)
+    })
+    // console.log('面包屑', breadcrumbs)
     return {
+      breadcrumbs,
       isFold,
       handleFoldChange
     }
@@ -53,7 +74,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   .fold {
-  cursor: pointer;
+    cursor: pointer;
   }
   .content {
     flex: 1;

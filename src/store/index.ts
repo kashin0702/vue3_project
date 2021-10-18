@@ -1,6 +1,7 @@
 // 给useStore起一个别名useVuexStore 防止命名冲突
 import { createStore, Store, useStore as useVuexStore } from 'vuex'
 import { login } from './login/login'
+import { system } from './main/system/system'
 import type { RootState, StoreType } from './types'
 
 const store = createStore<RootState>({
@@ -14,7 +15,8 @@ const store = createStore<RootState>({
   actions: {},
   // 导入模块
   modules: {
-    login
+    login,
+    system
   }
 })
 
