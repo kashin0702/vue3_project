@@ -38,8 +38,8 @@
           :label="propItem.label"
           :min-width="propItem.minWidth"
         >
-        <!-- 1.把所有要显示的列都写在作用域插槽内 -->
-        <!-- 2.利用slotName 动态绑定所有slot插槽 -->
+          <!-- 1.把所有要显示的列都写在作用域插槽内 -->
+          <!-- 2.利用slotName 动态绑定所有slot插槽 -->
           <template #default="scope">
             <!-- 利用插槽prop 把row数据传出去给父组件 -->
             <slot :name="propItem.slotName" :row="scope.row">
@@ -52,11 +52,11 @@
     <div class="footer">
       <slot name="footer">
         <el-pagination
-          v-model:currentPage="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :page-sizes="[10, 20, 30]"
+          :page-size="pageInfo.pageSize"
+          :current-page="pageInfo.currentPage"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="dataCount"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         >
@@ -89,18 +89,35 @@ export default defineComponent({
     },
     title: {
       type: String
+    },
+    dataCount: {
+      type: Number,
+      default: 0
+    },
+    // 父组件传过来的v-model双向绑定数据
+    pageInfo: {
+      type: Object,
+      default: () => ({ currentPage: 0, pageSize: 10 })
     }
   },
-  emits: ['handleSelectionChange'],
-  setup(prop, { emit }) {
+  emits: ['handleSelectionChange', 'update:pageInfo'],
+  setup(props, { emit }) {
     const handleSelectionChange = (value: any) => {
       console.log(value)
       // 把事件发出去给父组件调用 value是选中列的数组
       emit('handleSelectionChange', value)
     }
-
+    // 分页改变事件 触发双向绑定update事件 并把修改的值传出去
+    const handleSizeChange = (pageSize: number) => {
+      emit('update:pageInfo', { ...props.pageInfo, pageSize })
+    }
+    const handleCurrentChange = (currentPage: number) => {
+      emit('update:pageInfo', { ...props.pageInfo, currentPage })
+    }
     return {
-      handleSelectionChange
+      handleSelectionChange,
+      handleSizeChange,
+      handleCurrentChange
     }
   }
 })

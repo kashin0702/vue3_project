@@ -54,9 +54,10 @@ class Http {
         this.loading?.close()
         console.log('响应对象:', res)
         const { status, data } = res
-        // 1.status==200，根据接口状态码判断各种情况
+        // 1.status==200，网络请求成功
         if (status === 200) {
           if (data.code === '-1001') {
+            // 根据接口状态码判断各种情况
             console.log('未登录请求失败，错误信息')
             ElMessage({
               type: 'error',
@@ -74,7 +75,7 @@ class Http {
           }
           return data
         } else {
-          // 响应成功，但status !== 200的情况
+          // status !== 200的情况
           ElMessage({
             type: 'error',
             message: `请求失败:${status}`
@@ -86,6 +87,10 @@ class Http {
         this.loading?.close()
         console.log('错误对象', err)
         const { status, statusText } = err.response
+        ElMessage({
+          type: 'error',
+          message: `请求失败else:${status}`
+        })
         if (status === 404) {
           console.log('404错误')
         }

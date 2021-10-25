@@ -11,14 +11,21 @@ export const system: Module<SystemState, RootState> = {
       userList: [],
       userCount: 0,
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+      goodsList: [],
+      goodsCount: 0
     }
   },
   getters: {
-    // 用getters传pageName 获取对应的state数据
+    // 传pageName 获取对应的state数据
     pageDataGetter(state) {
       return (pageName: string) => {
         return (state as any)[`${pageName}List`]
+      }
+    },
+    pageListCount(state) {
+      return (pageName: string) => {
+        return (state as any)[`${pageName}Count`]
       }
     }
   },
@@ -27,9 +34,21 @@ export const system: Module<SystemState, RootState> = {
     setUserList(state, list) {
       state.userList = list
     },
+    setUserCount(state, count) {
+      state.userCount = count
+    },
     // 角色列表
     setRoleList(state, list) {
       state.roleList = list
+    },
+    setRoleCount(state, count) {
+      state.roleCount = count
+    },
+    setGoodsList(state, list) {
+      state.goodsList = list
+    },
+    setGoodsCount(state, count) {
+      state.goodsCount = count
     }
   },
   actions: {
@@ -53,6 +72,7 @@ export const system: Module<SystemState, RootState> = {
       switch (pageName) {
         case 'user':
           commit('setUserList', pageResult.data.list)
+          commit('setUserCount', pageResult.data.totalCount)
           break
         case 'role':
           commit('setRoleList', pageResult.data.list)

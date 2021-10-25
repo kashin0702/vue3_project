@@ -3,4 +3,6 @@ export interface SystemState {
   roleList: any[]
   userCount: number
   roleCount: number
+  goodsList: any[]
+  goodsCount: number
 }

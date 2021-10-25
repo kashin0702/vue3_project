@@ -16,23 +16,23 @@ export const searchFormConfig: Form = {
       placeholder: '请输入用户名'
     },
     {
-      field: 'password',
-      type: 'password',
-      label: '密码',
-      placeholder: '请输入密码'
+      field: 'cellphone',
+      type: 'input',
+      label: '电话号码',
+      placeholder: '请输入电话号码'
     },
     {
-      field: 'sport',
+      field: 'enable',
       type: 'select',
-      label: '喜欢的运动',
-      placeholder: '请选择喜欢的运动',
+      label: '用户状态',
+      placeholder: '请选择用户状态',
       options: [
-        { label: '篮球', value: 1 },
-        { label: '足球', value: 2 }
+        { label: '禁用', value: 0 },
+        { label: '启用', value: 1 }
       ]
     },
     {
-      field: 'createdTime',
+      field: 'createAt',
       type: 'datepicker',
       label: '创建时间',
       placeholder: '请选择创建时间',

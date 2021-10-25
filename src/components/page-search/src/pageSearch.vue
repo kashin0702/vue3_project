@@ -4,7 +4,7 @@
       <template #footer>
         <div class="search-btns">
           <el-button icon="el-icon-delete" @click="resetForm">重置</el-button>
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="searchTable">搜索</el-button>
         </div>
       </template>
     </pro-form>
@@ -24,7 +24,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['resetForm', 'searchTable'],
+  setup(props, { emit }) {
     // 双向绑定的数据字段不能写死 因为每个页面查询字段不同
     // const formData = ref({
     //   name: '',
@@ -46,10 +47,16 @@ export default defineComponent({
       for (const key in formOriginData) {
         formData.value[key] = formOriginData[key]
       }
+      emit('resetForm') // 发送重置事件给父组件user.vue
+    }
+    // 搜索表单
+    const searchTable = () => {
+      emit('searchTable', formData.value) // 发送搜索事件，搜索参数给父组件user.vue
     }
     return {
       formData,
-      resetForm
+      resetForm,
+      searchTable
     }
   }
 })
