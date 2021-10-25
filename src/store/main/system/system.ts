@@ -76,6 +76,7 @@ export const system: Module<SystemState, RootState> = {
           break
         case 'role':
           commit('setRoleList', pageResult.data.list)
+          commit('setRoleCount', pageResult.data.totalCount)
           break
       }
     }
