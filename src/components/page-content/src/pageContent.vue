@@ -13,7 +13,7 @@
           >新增</el-button
         >
       </template>
-      <!-- 定义enable为自定义渲染列，并通过作用域插槽拿到scope.row数据 -->
+      <!-- 定义enable为动态通用插槽，并通过作用域插槽拿到scope.row数据 -->
       <template #enable="scope">
         <el-button
           plain
@@ -23,8 +23,9 @@
           {{ scope.row.enable ? '启用' : '禁用' }}</el-button
         >
       </template>
+      <!-- createAt updateAt也定义为动态通用插槽 -->
       <template #createAt="scope">
-        <!-- 使用注册的$filters将utc时间格式化为本地时间 -->
+        <!-- 使用全局注册的$filters将utc时间格式化为本地时间 -->
         <strong>{{ $filters.formatUTCTime(scope.row.createAt) }}</strong>
       </template>
       <template #updateAt="scope">
@@ -33,6 +34,17 @@
       <template #buttons>
         <el-button icon="el-icon-edit" size="mini" type="text">编辑</el-button>
         <el-button icon="el-icon-delete" size="mini" type="text">删除</el-button>
+      </template>
+
+      <!--难点： 动态插入剩余的非通用插槽 -->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
       </template>
     </pro-table>
   </div>
@@ -67,7 +79,7 @@ export default defineComponent({
     // pagination分页绑定数据
     const pageInfo = ref({
       pageSize: 10,
-      currentPage: 0
+      currentPage: 1
     })
     // 监听分页改变事件 update:pageInfo 触发getPageData刷新页面
     watch(pageInfo, () => {
@@ -79,7 +91,7 @@ export default defineComponent({
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName, //把pageName传给请求方法
         queryInfo: {
-          offset: pageInfo.value.currentPage * pageInfo.value.pageSize, // 查询偏移量 currentPage * pageSize
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize, // 查询偏移量 currentPage * pageSize
           size: pageInfo.value.pageSize,
           ...params
         }
@@ -101,11 +113,21 @@ export default defineComponent({
       store.getters['system/pageListCount'](props.pageName)
     )
 
+    // 通过传入的配置文件,过滤获取其他非公有的动态插槽名称
+    const otherPropSlots = props.tableContentConfig?.propList.filter((el: any) => {
+        if (el.slotName === 'createAt') return false
+        if (el.slotName === 'updateAt') return false
+        if (el.slotName === 'enable') return false
+        if (el.slotName === 'buttons') return false
+        return true
+      }
+    )
     return {
       listData,
       dataCount,
       getPageData,
-      pageInfo
+      pageInfo,
+      otherPropSlots
     }
   }
 })

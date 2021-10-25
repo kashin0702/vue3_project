@@ -64,6 +64,9 @@ export const system: Module<SystemState, RootState> = {
         case 'role':
           pageUrl = '/role/list'
           break
+        case 'goods':
+          pageUrl = '/goods/list'
+          break
       }
       // 2.发起数据请求
       const pageResult = await getPageListData(pageUrl, payload.queryInfo)
@@ -77,6 +80,10 @@ export const system: Module<SystemState, RootState> = {
         case 'role':
           commit('setRoleList', pageResult.data.list)
           commit('setRoleCount', pageResult.data.totalCount)
+          break
+        case 'goods':
+          commit('setGoodsList', pageResult.data.list)
+          commit('setGoodsCount', pageResult.data.totalCount)
           break
       }
     }
