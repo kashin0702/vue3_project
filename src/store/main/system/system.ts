@@ -1,19 +1,21 @@
 import { Module } from 'vuex'
 import type { SystemState } from './types'
 import type { RootState } from '../../types'
-import { getPageListData } from '@/service/main/system/system'
-
+import { getPageListData, deletePageData } from '@/service/main/system/system'
+import { ElMessageBox, ElMessage } from 'element-plus'
 // 系统管理内的子模块数据(用户管理，角色管理等)都放在System父模块内
 export const system: Module<SystemState, RootState> = {
   namespaced: true,
   state() {
     return {
-      userList: [],
-      userCount: 0,
+      usersList: [],
+      usersCount: 0,
       roleList: [],
       roleCount: 0,
       goodsList: [],
-      goodsCount: 0
+      goodsCount: 0,
+      menuList: [],
+      menuCount: 0
     }
   },
   getters: {
@@ -30,12 +32,12 @@ export const system: Module<SystemState, RootState> = {
     }
   },
   mutations: {
-    // 保存用户列表
+    // 用户列表
     setUserList(state, list) {
-      state.userList = list
+      state.usersList = list
     },
     setUserCount(state, count) {
-      state.userCount = count
+      state.usersCount = count
     },
     // 角色列表
     setRoleList(state, list) {
@@ -44,11 +46,19 @@ export const system: Module<SystemState, RootState> = {
     setRoleCount(state, count) {
       state.roleCount = count
     },
+    // 商品列表
     setGoodsList(state, list) {
       state.goodsList = list
     },
     setGoodsCount(state, count) {
       state.goodsCount = count
+    },
+    // 菜单列表
+    setMenuList(state, list) {
+      state.menuList = list
+    },
+    setMenuCount(state, count) {
+      state.menuCount = count
     }
   },
   actions: {
@@ -58,7 +68,7 @@ export const system: Module<SystemState, RootState> = {
       let pageUrl = ''
       // 重点:根据传进来的pageName 设置不同的请求url 实现一个方法请求不同页面的page数据
       switch (pageName) {
-        case 'user':
+        case 'users':
           pageUrl = '/users/list'
           break
         case 'role':
@@ -67,13 +77,16 @@ export const system: Module<SystemState, RootState> = {
         case 'goods':
           pageUrl = '/goods/list'
           break
+        case 'menu':
+          pageUrl = '/menu/list'
+          break
       }
       // 2.发起数据请求
       const pageResult = await getPageListData(pageUrl, payload.queryInfo)
       console.log('页面数据', pageResult)
       // 3.将数据存储到state中
       switch (pageName) {
-        case 'user':
+        case 'users':
           commit('setUserList', pageResult.data.list)
           commit('setUserCount', pageResult.data.totalCount)
           break
@@ -85,7 +98,36 @@ export const system: Module<SystemState, RootState> = {
           commit('setGoodsList', pageResult.data.list)
           commit('setGoodsCount', pageResult.data.totalCount)
           break
+        case 'menu':
+          commit('setMenuList', pageResult.data.list)
+          commit('setMenuCount', pageResult.data.totalCount)
       }
+    },
+    // 删除数据
+    async deleteListDataAction({ commit, dispatch }, payload: any) {
+      const { pageName, id } = payload
+      ElMessageBox.confirm('确认要删除此用户?', '删除提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await deletePageData(pageName, id)
+          // 删除成功后刷新页面
+          dispatch('getPageListAction', {
+            pageName,
+            queryInfo: {
+              offset: 0,
+              size: 10
+            }
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }

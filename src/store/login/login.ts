@@ -10,9 +10,8 @@ import {
 
 import router from '@/router'
 import localCache from '@/utils/localCache'
-// 引入映射路由的方法
-import { mapMenusToRoutes } from '@/utils/mapRoutes'
-
+import { mapMenusToRoutes } from '@/utils/mapRoutes' // 引入映射路由的方法
+import { mapMenusToPermissions } from '@/utils/mapRoutes' // 获取权限方法
 // Module有2个必传泛型：1.模块类型, 2.根类型
 export const login: Module<LoginState, RootState> = {
   namespaced: true,
@@ -20,7 +19,8 @@ export const login: Module<LoginState, RootState> = {
     return {
       token: '',
       userinfo: {},
-      userMenus: []
+      userMenus: [],
+      permissions: []
     }
   },
   getters: {},
@@ -41,6 +41,10 @@ export const login: Module<LoginState, RootState> = {
       routes.forEach((route) => {
         router.addRoute('Main', route)
       })
+
+      // 3.获取全部权限
+      const permissions = mapMenusToPermissions(userMenus)
+      state.permissions = permissions
     }
   },
   actions: {

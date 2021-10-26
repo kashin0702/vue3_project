@@ -18,7 +18,7 @@
 
     <!-- 二次封装pro-form 只需引入page-search组件即可 -->
     <page-search
-      :searchFormConfig="searchFormConfig"
+      :formConfig="searchFormConfig"
       @resetForm="resetForm"
       @searchTable="searchTable"
     ></page-search>
@@ -26,9 +26,13 @@
     <!-- 二次封装pro-table 用户列表数据 传入pageName 获取user页面数据-->
     <page-content
       :tableContentConfig="tableContentConfig"
-      pageName="user"
+      pageName="users"
       ref="pageContentRef"
+      @handleEdit="handleEdit"
     ></page-content>
+
+    <!-- 弹窗 -->
+    <page-modal ref="modalRef" :formConfig="dialogFormConfig"></page-modal>
   </div>
 </template>
 
@@ -37,14 +41,17 @@ import { defineComponent, ref } from 'vue'
 // import { useStore } from 'vuex'
 // import type { FormItem } from '@/base-ui/ProForm' // FormItem对象类型
 import { PageSearch } from '@/components/page-search' // search组件
-import { PageContent } from '@/components/page-content' // content组件
+import { PageContent } from '@/components/page-content' // table组件
+import { PageModal } from '@/components/page-modal' // 弹窗组件
 import { searchFormConfig } from './config/search.config' // search配置文件
 import { tableContentConfig } from './config/content.config' // table配置文件
+import { dialogFormConfig } from './config/dialog.config'
 import { usePageSearch } from '@/hooks/usePageSearch' // 导入hooks文件
 export default defineComponent({
   components: {
     PageSearch,
-    PageContent
+    PageContent,
+    PageModal
   },
   setup() {
     // ！！**网络层请求数据放到组件内获取，通过store设计一个判断获取不同页面的pageList
@@ -87,6 +94,12 @@ export default defineComponent({
 
     // 通过hooks拿到通用的表单方法和ref
     const [pageContentRef, resetForm, searchTable] = usePageSearch()
+
+    const modalRef = ref()
+    //接收自定义事件 调用modal组件内visible值，设置显示
+    const handleEdit = (el: any) => {
+      modalRef.value.centerDialogVisible = true
+    }
     return {
       // formData,
       // labelWidth,
@@ -94,9 +107,11 @@ export default defineComponent({
       // listData,
       searchFormConfig,
       tableContentConfig,
+      dialogFormConfig,
       resetForm,
       searchTable,
-      pageContentRef
+      pageContentRef,
+      handleEdit
     }
   }
 })

@@ -1,6 +1,6 @@
 <template>
   <div class="page-search">
-    <pro-form v-bind="searchFormConfig" v-model="formData">
+    <pro-form v-bind="formConfig" v-model="formData">
       <template #footer>
         <div class="search-btns">
           <el-button icon="el-icon-delete" @click="resetForm">重置</el-button>
@@ -19,7 +19,7 @@ export default defineComponent({
     ProForm
   },
   props: {
-    searchFormConfig: {
+    formConfig: {
       type: Object,
       required: true
     }
@@ -34,7 +34,7 @@ export default defineComponent({
     //   createdTime: ''
     // })
     // 根据传入的config获取input字段
-    const formItems = props.searchFormConfig.formItems ?? []
+    const formItems = props.formConfig.formItems ?? []
     const formOriginData: any = {}
     for (const item of formItems) {
       formOriginData[item.field] = '' // 新建一个拥有所有field字段属性的form对象

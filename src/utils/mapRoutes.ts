@@ -71,5 +71,26 @@ export function pathToBreadcrumb(userMenus: any[], currentPath: string): any {
   pathToMenu(userMenus, currentPath, breadcrumbs)
   return breadcrumbs
 }
+
+// 按钮权限
+// 把菜单映射成所有权限的数组 在store层-login内执行
+export function mapMenusToPermissions(userMenus: any[]): any {
+  const permissons: any[] = []
+
+  //定义递归函数 获取所有权限
+  const _reduceGetPermissons = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 1 || menu.type === 2) {
+        _reduceGetPermissons(menu.children ?? []) //不是最后一层，继续执行递归,防止children=null时递归报错,传一个[]
+      } else if (menu.type === 3) {
+        permissons.push(menu.permission) //是最后一层，拿到permission权限属性放入权限数组
+      }
+    }
+  }
+  _reduceGetPermissons(userMenus)
+  console.log('所有权限', permissons)
+  return permissons
+}
+
 // 导出第一个菜单 在路由守卫内使用
 export { firstMenu }

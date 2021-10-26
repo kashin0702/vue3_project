@@ -7,9 +7,14 @@
       :dataCount="dataCount"
       v-model:pageInfo="pageInfo"
     >
-      <!-- 自定义表头按钮 -->
+      <!-- 自定义表头按钮 isCreate绑定新增权限 -->
       <template #headerBtns>
-        <el-button icon="el-icon-plus" size="medium" type="primary"
+        <el-button
+          v-if="isCreate"
+          icon="el-icon-plus"
+          size="medium"
+          type="primary"
+          @click="newAdd"
           >新增</el-button
         >
       </template>
@@ -31,9 +36,24 @@
       <template #updateAt="scope">
         <strong>{{ $filters.formatUTCTime(scope.row.updateAt) }}</strong>
       </template>
-      <template #buttons>
-        <el-button icon="el-icon-edit" size="mini" type="text">编辑</el-button>
-        <el-button icon="el-icon-delete" size="mini" type="text">删除</el-button>
+      <template #buttons="scope">
+        <!-- 给按钮绑定权限 -->
+        <el-button
+          v-if="isUpdate"
+          icon="el-icon-edit"
+          size="mini"
+          type="text"
+          @click="handleEdit(scope.row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-if="isDelete"
+          icon="el-icon-delete"
+          size="mini"
+          type="text"
+          @click="handleDelete(scope.row)"
+          >删除</el-button
+        >
       </template>
 
       <!--难点： 动态插入剩余的非通用插槽 -->
@@ -54,6 +74,7 @@
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ProTable } from '@/base-ui/ProTable'
+import { usePermissions } from '@/hooks/usePermissions' //获取权限钩子函数
 export default defineComponent({
   components: {
     ProTable
@@ -69,12 +90,18 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['handleEdit'],
+  setup(props, { emit }) {
     const store = useStore()
     // store.dispatch('system/getPageListAction', {
     //   pageName: props.pageName, //把pageName传给请求方法
     //   queryInfo: { offset: 0, size: 10 }
     // })
+    // 获取该页面的增删改查按钮权限
+    const isQuery = usePermissions(props.pageName, 'query')
+    const isCreate = usePermissions(props.pageName, 'create')
+    const isUpdate = usePermissions(props.pageName, 'update')
+    const isDelete = usePermissions(props.pageName, 'delete')
 
     // pagination分页绑定数据
     const pageInfo = ref({
@@ -88,6 +115,7 @@ export default defineComponent({
 
     // 用函数封装请求，供外部ref调用
     const getPageData = (params: any = {}) => {
+      if (!isQuery) return //如果没有查询权限，直接返回
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName, //把pageName传给请求方法
         queryInfo: {
@@ -102,19 +130,20 @@ export default defineComponent({
     getPageData()
 
     // 传入pageName 用getters动态拿数据
-    // 注意要把依赖数据放在computed内才会有数据，响应式数据
+    // 注意要把依赖数据放在computed内才会是响应式数据
     const listData = computed(() =>
       store.getters['system/pageDataGetter'](props.pageName)
     )
     console.log('listData:', listData)
 
-    // 获取数据条数
+    // 获取数据条数 放入pagination
     const dataCount = computed(() =>
       store.getters['system/pageListCount'](props.pageName)
     )
 
     // 通过传入的配置文件,过滤获取其他非公有的动态插槽名称
-    const otherPropSlots = props.tableContentConfig?.propList.filter((el: any) => {
+    const otherPropSlots = props.tableContentConfig?.propList.filter(
+      (el: any) => {
         if (el.slotName === 'createAt') return false
         if (el.slotName === 'updateAt') return false
         if (el.slotName === 'enable') return false
@@ -122,12 +151,29 @@ export default defineComponent({
         return true
       }
     )
+
+    // 编辑/删除 按钮操作 统一通过store层执行请求
+    const handleDelete = (el: any) => {
+      store.dispatch('system/deleteListDataAction', {
+        pageName: props.pageName,
+        id: el.id
+      })
+    }
+    // 点击编辑 发送自定义事件给父组件，显示弹窗
+    const handleEdit = (el: any) => {
+      emit('handleEdit', el)
+    }
     return {
       listData,
       dataCount,
       getPageData,
       pageInfo,
-      otherPropSlots
+      otherPropSlots,
+      isCreate,
+      isUpdate,
+      isDelete,
+      handleDelete,
+      handleEdit
     }
   }
 })

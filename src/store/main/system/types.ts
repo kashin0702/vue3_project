@@ -1,8 +1,10 @@
 export interface SystemState {
-  userList: any[]
+  usersList: any[]
   roleList: any[]
-  userCount: number
+  usersCount: number
   roleCount: number
   goodsList: any[]
   goodsCount: number
+  menuList: any[]
+  menuCount: number
 }

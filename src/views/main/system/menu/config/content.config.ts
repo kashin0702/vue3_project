@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 const propList = [
-    { prop: 'name', label: '菜单名称', minWidth: '100', slotName: 'name' },
-    { prop: 'type', label: '类型', minWidth: '60', slotName: '类型' },
+    { prop: 'name', label: '菜单名称', minWidth: '100' },
+    { prop: 'type', label: '类型', minWidth: '60'},
     { prop: 'url', label: '菜单url', minWidth: '100' },
     { prop: 'icon', label: '菜单图标', minWidth: '60' },
     { prop: 'permission', label: '按钮权限', minWidth: '100' },
