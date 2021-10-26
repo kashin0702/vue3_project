@@ -90,7 +90,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['handleEdit'],
+  emits: ['handleEdit', 'newAdd'],
   setup(props, { emit }) {
     const store = useStore()
     // store.dispatch('system/getPageListAction', {
@@ -163,6 +163,10 @@ export default defineComponent({
     const handleEdit = (el: any) => {
       emit('handleEdit', el)
     }
+    // 新增弹窗
+    const newAdd = () => {
+      emit('newAdd')
+    }
     return {
       listData,
       dataCount,
@@ -173,7 +177,8 @@ export default defineComponent({
       isUpdate,
       isDelete,
       handleDelete,
-      handleEdit
+      handleEdit,
+      newAdd
     }
   }
 })

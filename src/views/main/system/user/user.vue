@@ -1,21 +1,5 @@
 <template>
   <div class="user">
-    <!-- 原 未封装代码 -->
-    <!-- <div class="search">
-      <pro-form
-        :formItems="formItems"
-        :labelWidth="labelWidth"
-        v-model="formData"
-      >
-        <template #footer>
-          <div class="search-btns">
-            <el-button icon="el-icon-delete">重置</el-button>
-            <el-button type="primary" icon="el-icon-search">搜索</el-button>
-          </div>
-        </template>
-      </pro-form>
-    </div> -->
-
     <!-- 二次封装pro-form 只需引入page-search组件即可 -->
     <page-search
       :formConfig="searchFormConfig"
@@ -29,10 +13,15 @@
       pageName="users"
       ref="pageContentRef"
       @handleEdit="handleEdit"
+      @newAdd="newAdd"
     ></page-content>
 
     <!-- 弹窗 -->
-    <page-modal ref="modalRef" :formConfig="dialogFormConfig"></page-modal>
+    <page-modal
+      ref="modalRef"
+      :formConfig="dialogFormConfig"
+      :defaultInfo="defaultInfo"
+    ></page-modal>
   </div>
 </template>
 
@@ -95,11 +84,23 @@ export default defineComponent({
     // 通过hooks拿到通用的表单方法和ref
     const [pageContentRef, resetForm, searchTable] = usePageSearch()
 
+    // 获取子组件ref
     const modalRef = ref()
-    //接收自定义事件 调用modal组件内visible值，设置显示
+    //定义一个默认初始化值
+    const defaultInfo = ref({})
+
     const handleEdit = (el: any) => {
+      // console.log('点击了编辑按钮', el)
+      defaultInfo.value = { ...el } //保存编辑对象时获取到的数据
       modalRef.value.centerDialogVisible = true
     }
+
+    const newAdd = () => {
+      defaultInfo.value = {}
+      modalRef.value.centerDialogVisible = true
+    }
+
+
     return {
       // formData,
       // labelWidth,
@@ -111,7 +112,10 @@ export default defineComponent({
       resetForm,
       searchTable,
       pageContentRef,
-      handleEdit
+      handleEdit,
+      newAdd,
+      modalRef,
+      defaultInfo
     }
   }
 })
