@@ -15,6 +15,7 @@
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <!-- select列 -->
       <el-table-column
@@ -37,6 +38,7 @@
           :prop="propItem.prop"
           :label="propItem.label"
           :min-width="propItem.minWidth"
+          show-overflow-tooltip
         >
           <!-- 1.把所有要显示的列都写在作用域插槽内 -->
           <!-- 2.利用slotName 动态绑定所有slot插槽 -->
@@ -97,7 +99,12 @@ export default defineComponent({
     // 父组件传过来的v-model双向绑定数据
     pageInfo: {
       type: Object,
-      default: () => ({ currentPage: 0, pageSize: 10 })
+      default: () => ({ currentPage: 1, pageSize: 10 })
+    },
+    // table列是否可展开的配置项 配置在tableContentConfig中导入
+    childrenProps: {
+      type: Object,
+      default: () => ({})
     }
   },
   emits: ['handleSelectionChange', 'update:pageInfo'],
