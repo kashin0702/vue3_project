@@ -36,6 +36,7 @@ import { searchFormConfig } from './config/search.config' // search配置文件
 import { tableContentConfig } from './config/content.config' // table配置文件
 import { dialogFormConfig } from './config/dialog.config'
 import { usePageSearch } from '@/hooks/usePageSearch' // 导入hooks文件
+import { usePageModal } from '@/hooks/usePageModal'
 export default defineComponent({
   components: {
     PageSearch,
@@ -81,26 +82,27 @@ export default defineComponent({
     //   pageContentRef.value?.getPageData(params)
     // }
 
-    // 通过hooks拿到通用的表单方法和ref
+    // 通用的表单查询和重置  封装到hook内
     const [pageContentRef, resetForm, searchTable] = usePageSearch()
 
-    // 获取子组件ref
-    const modalRef = ref()
-    //定义一个默认初始化值
-    const defaultInfo = ref({})
+    // // 获取子组件ref
+    // const modalRef = ref()
+    // //定义一个默认初始化值
+    // const defaultInfo = ref({})
 
-    const handleEdit = (el: any) => {
-      // console.log('点击了编辑按钮', el)
-      defaultInfo.value = { ...el } //保存编辑对象时获取到的数据
-      modalRef.value.centerDialogVisible = true
-    }
+    // const handleEdit = (el: any) => {
+    //   // console.log('点击了编辑按钮', el)
+    //   defaultInfo.value = { ...el } //保存编辑对象时获取到的数据
+    //   modalRef.value.centerDialogVisible = true
+    // }
 
-    const newAdd = () => {
-      defaultInfo.value = {}
-      modalRef.value.centerDialogVisible = true
-    }
+    // const newAdd = () => {
+    //   defaultInfo.value = {}
+    //   modalRef.value.centerDialogVisible = true
+    // }
 
-
+    // 页面共享的逻辑都写到hook内  弹窗相关功能
+    const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal()
     return {
       // formData,
       // labelWidth,

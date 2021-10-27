@@ -1,6 +1,6 @@
 <template>
   <div class="page-modal">
-    <!-- 注意：destroy-on-close 关闭时销毁元素，下次打开才会重新加载监听后刷新的数据 -->
+    <!-- 注意：el-dialog包裹的是pro-form组件 用destroy-on-close关闭时销毁元素，下次打开才会重新加载监听后刷新的数据 -->
     <el-dialog
       v-model="centerDialogVisible"
       title="标题"
@@ -52,7 +52,8 @@ export default defineComponent({
         for (const el of props.formConfig.formItems) {
           formData.value[el.field] = newValue[el.field]
         }
-    })
+      }
+    )
     return {
       formData,
       centerDialogVisible

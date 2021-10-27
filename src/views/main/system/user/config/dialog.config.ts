@@ -17,6 +17,12 @@ export const dialogFormConfig = {
       type: 'input',
       label: '电话号码',
       placeholder: '请输入电话号码'
+    },
+    {
+      field: 'password',
+      type: 'password',
+      label: '密码',
+      placeholder: '请输入密码'
     }
   ],
   colLayout: { span: 24 },
