@@ -44,7 +44,7 @@ export default defineComponent({
     PageModal
   },
   setup() {
-    // ！！**网络层请求数据放到组件内获取，通过store设计一个判断获取不同页面的pageList
+    // ！！**网络层请求页面数据放到组件内获取，因为请求的接口相似，通过store设计一个判断获取不同页面的pageList
     // const store = useStore()
     // // 调用store内的action方法获取Page数据
     // store.dispatch('system/getPageListAction', {
@@ -101,8 +101,26 @@ export default defineComponent({
     //   modalRef.value.centerDialogVisible = true
     // }
 
+    // 新增弹窗显示密码，编辑弹窗隐藏密码 通过回调函数形式传给hook执行
+    const AddCb = () => {
+      const passwordItem = dialogFormConfig.formItems.find((item) => {
+        return item.field === 'password'
+      })
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      passwordItem!.isHidden = false
+    }
+    const editCb = () => {
+      const passwordItem = dialogFormConfig.formItems.find((item) => {
+        return item.field === 'password'
+      })
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      passwordItem!.isHidden = true
+    }
+
     // 页面共享的逻辑都写到hook内  弹窗相关功能
-    const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal()
+    // eslint-disable-next-line prettier/prettier
+    const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal(AddCb, editCb)
+
     return {
       // formData,
       // labelWidth,
