@@ -34,7 +34,7 @@ export const login: Module<LoginState, RootState> = {
     setUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
       /**动态路由重点*/
-      // 1.在这个方法内调用映射路由方法, 传入userMenus
+      // 1.在这个方法内调用映射路由方法, 入参userMenus
       const routes = mapMenusToRoutes(userMenus)
       console.log('映射路由', routes)
       // 2. 将routes动态添加到main->children下面

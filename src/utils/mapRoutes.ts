@@ -43,8 +43,8 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   return routes //返回动态路由
 }
 
-
 // 根据当前页面路径获取对应的Menu菜单 用于保存当前选中的菜单 可选参数面包屑数组
+// eslint-disable-next-line prettier/prettier
 export function pathToMenu(userMenus: any[], currentPath: string, breadcrumbs?: any[]): any {
   for (const menu of userMenus) {
     // 如果type=1右侧不会有路由效果，所以要递归

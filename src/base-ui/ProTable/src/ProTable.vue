@@ -107,6 +107,7 @@ export default defineComponent({
       default: () => ({})
     }
   },
+  // !!v-model传过来的数据必须使用update:xxx自定义事件发送出去
   emits: ['handleSelectionChange', 'update:pageInfo'],
   setup(props, { emit }) {
     const handleSelectionChange = (value: any) => {

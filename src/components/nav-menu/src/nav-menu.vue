@@ -66,8 +66,9 @@ export default defineComponent({
     // 当userMenus.url === path时 返回这个menu 即是当前的页面
     const route = useRoute()
     const currentPath = route.path
+    // 根据入参currentPath 拿到对应的id
     const menu = pathToMenu(userMenus.value, currentPath)
-    // 保存符合条件的页面id
+    // 拿到id, 给default-active绑定激活页效果
     const defaultActive = ref(menu.id + '')
 
     // 路由跳转
