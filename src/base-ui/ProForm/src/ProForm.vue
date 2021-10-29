@@ -10,7 +10,11 @@
           <!-- 使用v-bind绑定响应式布局对象colLayout -->
           <el-col v-bind="colLayout">
             <!-- 绑定动态样式itemStyle -->
-            <el-form-item :label="item.label" :style="itemStyle">
+            <el-form-item
+              :label="item.label"
+              :style="itemStyle"
+              v-if="!item.isHidden"
+            >
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
