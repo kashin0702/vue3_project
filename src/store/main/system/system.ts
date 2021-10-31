@@ -1,7 +1,12 @@
 import { Module } from 'vuex'
 import type { SystemState } from './types'
 import type { RootState } from '../../types'
-import { getPageListData, deletePageData } from '@/service/main/system/system'
+import {
+  getPageListData,
+  deletePageData,
+  addNewPageData,
+  editPageData
+} from '@/service/main/system/system'
 import { ElMessageBox, ElMessage } from 'element-plus'
 // 系统管理内的子模块数据(用户管理，角色管理等)都放在System父模块内
 export const system: Module<SystemState, RootState> = {
@@ -128,6 +133,35 @@ export const system: Module<SystemState, RootState> = {
             message: '已取消删除'
           })
         })
+    },
+    // 新增数据
+    async addPageDataAction({ dispatch }, payload: any) {
+      // 1.发送请求新增数据
+      const { pageName, newdata } = payload
+      const pageUrl = `/${pageName}`
+      await addNewPageData(pageUrl, newdata)
+      // 2. 刷新页面
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+    // 编辑数据
+    async editPageDataAction({ dispatch }, payload: any) {
+      const { pageName, id, editdata } = payload
+      const pageUrl = `/${pageName}/${id}`
+      await editPageData(pageUrl, editdata)
+      // 刷新页面
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
     }
   }
 }

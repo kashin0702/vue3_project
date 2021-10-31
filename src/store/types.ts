@@ -4,6 +4,8 @@ import { SystemState } from './main/system/types'
 export interface RootState {
   name: string
   password: number
+  allDepartmentList: any[]
+  allRoleList: any[]
 }
 
 // vuex各个模块的类型

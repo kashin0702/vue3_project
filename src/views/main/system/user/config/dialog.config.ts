@@ -24,6 +24,20 @@ export const dialogFormConfig = {
       label: '密码',
       placeholder: '请输入密码',
       isHidden: true
+    },
+    {
+      field: 'department',
+      type: 'select',
+      label: '部门',
+      placeholder: '请选择部门',
+      options: []
+    },
+    {
+      field: 'role',
+      type: 'select',
+      label: '角色',
+      placeholder: '请选择角色',
+      options: []
     }
   ],
   colLayout: { span: 24 },

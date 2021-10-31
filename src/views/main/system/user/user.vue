@@ -19,15 +19,16 @@
     <!-- 弹窗 -->
     <page-modal
       ref="modalRef"
-      :formConfig="dialogFormConfig"
+      :formConfig="dialogFormConfigRef"
       :defaultInfo="defaultInfo"
+      pageName="users"
     ></page-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-// import { useStore } from 'vuex'
+import { defineComponent, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 // import type { FormItem } from '@/base-ui/ProForm' // FormItem对象类型
 import { PageSearch } from '@/components/page-search' // search组件
 import { PageContent } from '@/components/page-content' // table组件
@@ -121,6 +122,36 @@ export default defineComponent({
     // eslint-disable-next-line prettier/prettier
     const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal(AddCb, editCb)
 
+    // 获取下拉项部门、角色数据
+    const store = useStore()
+    // 把要动态刷新的值放在computed中 变成一个ref可响应对象， 这样下拉选项才会刷新
+    const dialogFormConfigRef = computed(() => {
+      let departItem = dialogFormConfig.formItems.find(
+        (item: any) => item.field === 'department'
+      )
+      let roleItem = dialogFormConfig.formItems.find(
+        (item: any) => item.field === 'role'
+      )
+      // options的值改变依赖store的值的改变
+      const departOptions = store.state.allDepartmentList.map((item: any) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
+      const roleOptions = store.state.allRoleList.map((item: any) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
+      // 这些item又是dialogFormConfig对象的引用， 所以dialogFormConfig会动态改变
+      departItem!.options = departOptions
+      roleItem!.options = roleOptions
+      // 最后返回这个配置参数，并绑定到组件上 因为是引用类型，所以dialogFormConfig的值也会改变
+      return dialogFormConfig
+    })
+
     return {
       // formData,
       // labelWidth,
@@ -128,14 +159,15 @@ export default defineComponent({
       // listData,
       searchFormConfig,
       tableContentConfig,
-      dialogFormConfig,
+      // dialogFormConfig, // page-modal不再绑定这个配置
       resetForm,
       searchTable,
       pageContentRef,
       handleEdit,
       newAdd,
       modalRef,
-      defaultInfo
+      defaultInfo,
+      dialogFormConfigRef // page-modal绑定这个computed返回的响应式对象
     }
   }
 })

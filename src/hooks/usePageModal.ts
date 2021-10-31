@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-type CbFn = () => void
+type CbFn = () => void //定义回调函数类型
 
 export function usePageModal(addCb?: CbFn, editCb?: CbFn): any {
   // 获取子组件ref

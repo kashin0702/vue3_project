@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosInstance } from 'axios'
 import type { RequestConfig, RequestInterceptors } from './type'
 import { ElLoading } from 'element-plus'
 import { ElMessage } from 'element-plus'
@@ -89,7 +89,7 @@ class Http {
         const { status, statusText } = err.response
         ElMessage({
           type: 'error',
-          message: `请求失败else:${status}`
+          message: `请求失败else:${status}${statusText}`
         })
         if (status === 404) {
           console.log('404错误')
@@ -139,6 +139,10 @@ class Http {
 
   delete<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' })
+  }
+
+  patch<T = any>(config: RequestConfig<T>): Promise<T> {
+    return this.request({ ...config, method: 'PATCH' })
   }
 }
 
