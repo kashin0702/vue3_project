@@ -49,13 +49,16 @@ export const login: Module<LoginState, RootState> = {
   },
   actions: {
     // 处理登录请求，做3件事
-    async accountLoginAction({ commit }, payload: any) {
+    async accountLoginAction({ commit, dispatch }, payload: any) {
       console.log('执行vuex-accountLoginAction登录', payload)
       // 1.实现登录逻辑，获取Token
       const loginResult = await accountLoginRequest(payload)
       const { id, token } = loginResult.data
       commit('setToken', token)
       localCache.setCache('token', token)
+
+      // 1.5 拿到Token后，请求下拉框数据  注意这里入参写法，请求的是根store的getInitList方法
+      dispatch('getInitList', null, { root: true })
 
       // 2.根据id获取用户信息
       const userInfoResult = await requestUserInfoById(id)
@@ -75,10 +78,12 @@ export const login: Module<LoginState, RootState> = {
     },
 
     // 用户刷新时,初始化store数据
-    loadLocalLogin({ commit }) {
+    loadLocalLogin({ commit, dispatch }) {
       const token = localCache.getCache('token')
       if (token) {
         commit('setToken', token)
+        // 这里也要重新请求下拉选项数据
+        dispatch('getInitList', null, { root: true })
       }
       const userInfo = localCache.getCache('userInfo')
       if (userInfo) {

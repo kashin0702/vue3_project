@@ -127,10 +127,10 @@ export default defineComponent({
     // 把要动态刷新的值放在computed中 变成一个ref可响应对象， 这样下拉选项才会刷新
     const dialogFormConfigRef = computed(() => {
       let departItem = dialogFormConfig.formItems.find(
-        (item: any) => item.field === 'department'
+        (item: any) => item.field === 'departmentId'
       )
       let roleItem = dialogFormConfig.formItems.find(
-        (item: any) => item.field === 'role'
+        (item: any) => item.field === 'roleId'
       )
       // options的值改变依赖store的值的改变
       const departOptions = store.state.allDepartmentList.map((item: any) => {
@@ -173,5 +173,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

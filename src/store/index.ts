@@ -52,8 +52,6 @@ const store = createStore<RootState>({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function setupStore() {
   store.dispatch('login/loadLocalLogin')
-  // 把请求下拉框数据放在页面初始化方法内
-  store.dispatch('getInitList')
 }
 
 // 因为vuex和typescript兼容性很差
