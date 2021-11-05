@@ -109,7 +109,7 @@ export const system: Module<SystemState, RootState> = {
       }
     },
     // 删除数据
-    async deleteListDataAction({ commit, dispatch }, payload: any) {
+    async deleteListDataAction({ dispatch }, payload: any) {
       const { pageName, id } = payload
       ElMessageBox.confirm('确认要删除此用户?', '删除提示', {
         confirmButtonText: '确认',

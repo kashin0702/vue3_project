@@ -12,28 +12,6 @@ import './assets/css/index.less'
 import { setupStore } from './store'
 import { globalRegitser } from './global'
 
-// console.log('我是Baseurl111', BASE_URL)
-
-// import ajax from './service'
-// interface DataType {
-//   data: any
-//   returnCode: string
-// }
-// ajax
-//   .request<DataType>({
-//     url: '/home/multidata',
-//     method: 'GET',
-//     interceptors: {
-//       requestInterceptor: (config) => {
-//         console.log('单独请求的拦截', config)
-//         return config
-//       }
-//     }
-//   })
-//   .then((res) => {
-//     console.log(res.data)
-//     console.log(res.returnCode)
-//   })
 const app = createApp(App)
 
 // 注册过滤方法 $filters

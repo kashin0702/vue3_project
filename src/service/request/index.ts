@@ -53,8 +53,9 @@ class Http {
         // 将loading移除
         this.loading?.close()
         console.log('响应对象:', res)
+        console.log('响应失败response对象', (res as any).response)
         const { status, data } = res
-        // 1.status==200，网络请求成功
+        // 接口响应成功 且status == 200
         if (status === 200) {
           if (data.code === '-1001') {
             // 根据接口状态码判断各种情况
@@ -78,15 +79,17 @@ class Http {
           // status !== 200的情况
           ElMessage({
             type: 'error',
-            message: `请求失败:${status}`
+            message: `请求失败:${status}${res}`
           })
+          return Promise.reject(res)
         }
       },
+      // 接口无响应时 错误处理
       (err) => {
         // 响应失败也将loading移除
         this.loading?.close()
         console.log('错误对象', err)
-        const { status, statusText } = err.response
+        const { status, statusText } = err.response // err.response才能拿到具体数据
         ElMessage({
           type: 'error',
           message: `请求失败else:${status}${statusText}`
@@ -94,7 +97,7 @@ class Http {
         if (status === 404) {
           console.log('404错误')
         }
-        return err
+        return Promise.reject(err)
       }
     )
   }
@@ -103,6 +106,7 @@ class Http {
     return new Promise((resolve, reject) => {
       // 单独请求拦截器处理
       if (config.interceptors?.requestInterceptor) {
+        // 处理后的config要记得返回
         config = config.interceptors.requestInterceptor(config)
       }
       // 判断是否要显示Loading
@@ -115,6 +119,7 @@ class Http {
         .then((res) => {
           // 单独请求的响应拦截判断
           if (config.interceptors?.responseInterceptor) {
+            // 处理后的res也要返回过来
             res = config.interceptors.responseInterceptor(res)
           }
           resolve(res)

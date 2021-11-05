@@ -31,6 +31,7 @@ export const login: Module<LoginState, RootState> = {
     setUserInfo(state, userInfo: any) {
       state.userinfo = userInfo
     },
+    // 登录后重点功能: 1.设置左侧导航菜单 2.添加动态路由
     setUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
       /**动态路由重点*/

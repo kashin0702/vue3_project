@@ -102,7 +102,7 @@ export default defineComponent({
     //   modalRef.value.centerDialogVisible = true
     // }
 
-    // 新增弹窗显示密码，编辑弹窗隐藏密码 通过回调函数形式传给hook执行
+    // 弹窗显示密码字段，编辑弹窗隐藏密码 通过回调函数形式传给hook执行
     const AddCb = () => {
       const passwordItem = dialogFormConfig.formItems.find((item) => {
         return item.field === 'password'
@@ -145,7 +145,7 @@ export default defineComponent({
           value: item.id
         }
       })
-      // 这些item又是dialogFormConfig对象的引用， 所以dialogFormConfig会动态改变
+      // 这些item是dialogFormConfig对象的引用， 所以dialogFormConfig会动态改变
       departItem!.options = departOptions
       roleItem!.options = roleOptions
       // 最后返回这个配置参数，并绑定到组件上 因为是引用类型，所以dialogFormConfig的值也会改变

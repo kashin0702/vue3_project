@@ -9,6 +9,8 @@
       destroy-on-close
     >
       <pro-form v-bind="formConfig" v-model="formData"></pro-form>
+      <!-- 默认插槽 用来插入树形组件或其他 -->
+      <slot></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
@@ -39,6 +41,11 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    // 其他数据 例如树形数据   新增/编辑时合并到原表单数据中
+    otherInfo: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props) {
@@ -67,14 +74,16 @@ export default defineComponent({
         console.log('editdata', formData.value)
         store.dispatch('system/editPageDataAction', {
           pageName: props.pageName,
-          editdata: { ...formData.value },
+          // 拼接数据，包括了树形菜单权限otherInfo数据
+          editdata: { ...formData.value, ...props.otherInfo },
           id: props.defaultInfo.id
         })
       } else {
         // 新增数据
         store.dispatch('system/addPageDataAction', {
           pageName: props.pageName,
-          newdata: { ...formData.value }
+          // 把otherInfo数据合并到原数据
+          newdata: { ...formData.value, ...props.otherInfo }
         })
       }
     }

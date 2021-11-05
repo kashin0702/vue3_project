@@ -14,7 +14,7 @@ export function deletePageData(url: string, id: number): any {
 }
 
 // 新增数据
-export function addNewPageData(url: string, newdata: any): any {
+export function addNewPageData(url: string, newdata: any = {}): any {
   return ajax.post({
     url: url,
     data: newdata
@@ -22,7 +22,7 @@ export function addNewPageData(url: string, newdata: any): any {
 }
 
 // 编辑数据
-export function editPageData(url: string, editdata: any): any {
+export function editPageData(url: string, editdata: any = {}): any {
   return ajax.patch({
     url: url,
     data: editdata

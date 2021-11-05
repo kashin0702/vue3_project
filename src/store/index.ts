@@ -11,7 +11,8 @@ const store = createStore<RootState>({
       password: Number(),
       // 下拉框部门、角色列表数据 保存在根rootstore中
       allDepartmentList: [],
-      allRoleList: []
+      allRoleList: [],
+      menuTree: []
     }
   },
   mutations: {
@@ -20,25 +21,34 @@ const store = createStore<RootState>({
     },
     setAllRoleList(state, list) {
       state.allRoleList = list
+    },
+    setMenuTreeList(state, list) {
+      state.menuTree = list
     }
   },
   actions: {
-    // 请求下拉框的部门和角色数据
+    // 初始化时，请求下拉框的部门、角色、树形菜单树
     async getInitList({ commit }) {
+      // 请求下拉框的部门、角色
       const departmentListResult = await getPageListData('/department/list', {
         offset: 0,
         size: 1000
       })
+      const { list: departmentList } = departmentListResult.data
       const roleListResult = await getPageListData('/role/list', {
         offset: 0,
         size: 1000
       })
-
-      // 重命名list 并保存到state
-      const { list: departmentList } = departmentListResult.data
       const { list: roleList } = roleListResult.data
+
+      // 请求树形菜单
+      const menuTreeResult = await getPageListData('/menu/list', {})
+      const { list: menuList } = menuTreeResult.data
+
+      // 保存到state
       commit('setAllDepartmentList', departmentList)
       commit('setAllRoleList', roleList)
+      commit('setMenuTreeList', menuList)
     }
   },
   // 导入模块

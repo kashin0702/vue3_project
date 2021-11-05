@@ -6,6 +6,7 @@ export interface RootState {
   password: number
   allDepartmentList: any[]
   allRoleList: any[]
+  menuTree: any[]
 }
 
 // vuex各个模块的类型

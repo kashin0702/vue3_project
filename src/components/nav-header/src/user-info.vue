@@ -10,7 +10,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item icon="el-icon-circle-close">
+          <el-dropdown-item icon="el-icon-circle-close" @click="exitLogin">
             退出登录
           </el-dropdown-item>
           <el-dropdown-item divided>用户信息</el-dropdown-item>
@@ -24,14 +24,22 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import localCache from '@/utils/localCache'
 export default defineComponent({
   setup() {
+    const router = useRouter()
     const store = useStore()
     const name = computed(() => {
       return store.state.login.userinfo.name
     })
+    const exitLogin = () => {
+      localCache.deleteCache('token')
+      router.push('/main')  //跳转到首页 路由守卫判断没有token就会跳回登录页
+    }
     return {
-      name
+      name,
+      exitLogin
     }
   }
 })
