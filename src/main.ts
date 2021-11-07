@@ -11,11 +11,13 @@ import './assets/css/index.less'
 
 import { setupStore } from './store'
 import { globalRegitser } from './global'
+import registerProperties from '@/global/regitser-properties'
 
 const app = createApp(App)
 
 // 注册过滤方法 $filters
-app.use(globalRegitser)
+// app.use(globalRegitser)
+app.use(registerProperties) // 不从index导入， 直接use也生效
 
 app.use(store)
 /**

@@ -92,5 +92,22 @@ export function mapMenusToPermissions(userMenus: any[]): any {
   return permissons
 }
 
+// 把树形选中的节点转化为id数组
+export function reduceTreetoLeaf(leafs: any[]): any {
+  const checked: number[] = []
+
+  const reduceLeafs = (menuList: any) => {
+    for (const item of menuList) {
+      if (item.children && item.children.length > 0) {
+        reduceLeafs(item.children)
+      } else {
+        checked.push(item.id)
+      }
+    }
+  }
+  reduceLeafs(leafs)
+  return checked
+}
+
 // 导出第一个菜单 在路由守卫内使用
 export { firstMenu }

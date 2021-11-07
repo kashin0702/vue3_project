@@ -70,37 +70,9 @@ export default defineComponent({
     // })
     // const labelWidth = '150px'
 
-    /** 这部分代码封装到hooks内 */
-    // 拿pageContent组件ref 调用内部方法
-    // const pageContentRef = ref()
-    // // 重置表单
-    // const resetForm = () => {
-    //   // 通过ref拿到组件的方法, 再发送请求重新获取数据
-    //   pageContentRef.value?.getPageData()
-    // }
-    // // 搜索
-    // const searchTable = (params: any = {}) => {
-    //   pageContentRef.value?.getPageData(params)
-    // }
 
     // 通用的表单查询和重置  封装到hook内
     const [pageContentRef, resetForm, searchTable] = usePageSearch()
-
-    // // 获取子组件ref
-    // const modalRef = ref()
-    // //定义一个默认初始化值
-    // const defaultInfo = ref({})
-
-    // const handleEdit = (el: any) => {
-    //   // console.log('点击了编辑按钮', el)
-    //   defaultInfo.value = { ...el } //保存编辑对象时获取到的数据
-    //   modalRef.value.centerDialogVisible = true
-    // }
-
-    // const newAdd = () => {
-    //   defaultInfo.value = {}
-    //   modalRef.value.centerDialogVisible = true
-    // }
 
     // 弹窗显示密码字段，编辑弹窗隐藏密码 通过回调函数形式传给hook执行
     const AddCb = () => {
@@ -118,7 +90,7 @@ export default defineComponent({
       passwordItem!.isHidden = true
     }
 
-    // 页面共享的逻辑都写到hook内  弹窗相关功能
+    // 弹窗相关功能 共享逻辑都写到hook
     // eslint-disable-next-line prettier/prettier
     const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal(AddCb, editCb)
 
