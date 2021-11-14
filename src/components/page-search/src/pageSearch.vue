@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { ProForm } from '@/base-ui/ProForm'
 export default defineComponent({
   components: {
@@ -45,10 +45,18 @@ export default defineComponent({
     // 重置表单 对引用值修改不是重新赋值 才能修改组件内部的浅拷贝对象props.modelValue
     const resetForm = () => {
       for (const key in formOriginData) {
-        formData.value[key] = formOriginData[key]
+        // formData.value[key] = formOriginData[key] //两种写法都可以
+        formData.value[key] = ''
       }
-      emit('resetForm') // 发送重置事件给父组件user.vue
+      emit('resetForm') // 发送重置form事件给父组件
     }
+
+    // 子组件pro-form通过update:modelValue 事件 更新父组件formData
+    // watch(formData, (newValue) => {
+    //   console.log('父组件formData监听', newValue)
+    // }, {
+    //   deep: true
+    // })
     // 搜索表单
     const searchTable = () => {
       emit('searchTable', formData.value) // 发送搜索事件，搜索参数给父组件user.vue

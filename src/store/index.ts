@@ -2,6 +2,7 @@
 import { createStore, Store, useStore as useVuexStore } from 'vuex'
 import { login } from './login/login'
 import { system } from './main/system/system'
+import { dashboard } from './main/analysis/dashboard'
 import type { RootState, StoreType } from './types'
 import { getPageListData } from '@/service/main/system/system'
 const store = createStore<RootState>({
@@ -54,7 +55,8 @@ const store = createStore<RootState>({
   // 导入模块
   modules: {
     login,
-    system
+    system,
+    dashboard
   }
 })
 

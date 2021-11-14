@@ -117,6 +117,7 @@ export default defineComponent({
     }
     // 分页改变事件 触发双向绑定update事件 并把修改的值传出去
     const handleSizeChange = (pageSize: number) => {
+      // console.log('pagesize', pageSize)
       emit('update:pageInfo', { ...props.pageInfo, pageSize })
     }
     const handleCurrentChange = (currentPage: number) => {

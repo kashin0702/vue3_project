@@ -61,13 +61,13 @@ export default defineComponent({
     // 创建一个回调函数作为参数传给usePageModal 用来接收点击编辑按钮的得到的item数据
     const editFn = (item: any) => {
       console.log('我是role页面点击的编辑对象', item)
-      // 用递归创建一个id数组 传给tree方法回显选中的节点
+      // 用递归创建一个叶子节点的id数组 传给tree方法回显选中的节点
       const checkedLeafs = reduceTreetoLeaf(item.menuList)
-      // 弹窗方法内，包裹nextTick执行绑定
+      // 弹窗方法内，包裹nextTick, 表示在treeRef绑定后执行
       nextTick(() => {
         // ！注意：在editFn事件里直接调用treeRef时，弹框时ref还没绑定到组件上，treeRef.value等于undefined 必须包裹nextTick
         console.log('我是treeValue', treeRef.value)
-        treeRef.value.setCheckedKeys(checkedLeafs, false)
+        treeRef.value.setCheckedKeys(checkedLeafs, false) // 只设置叶子节点，父节点自动显示全选或半选状态
       })
     }
     const [modalRef, defaultInfo, handleEdit, newAdd] = usePageModal(undefined, editFn)

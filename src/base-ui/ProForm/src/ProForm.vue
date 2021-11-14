@@ -99,11 +99,11 @@ export default defineComponent({
   setup(props, { emit }) {
     // 解构传过来的对象生成一个拷贝对象，对父元素数据无影响
     const formData = ref({ ...props.modelValue })
-    // 监听传入的对象，并发送给父组件，实现单向数据流
+    // 监听传入的对象，并将新值发送给父组件，实现单向数据流
     watch(
       formData,
       (newValue) => {
-        // console.log('我是newValue', newValue)
+        console.log('子组件formData监听', newValue)
         emit('update:modelValue', newValue)
       },
       {

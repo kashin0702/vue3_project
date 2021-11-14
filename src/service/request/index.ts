@@ -54,7 +54,7 @@ class Http {
         this.loading?.close()
         console.log('响应对象:', res)
         console.log('响应失败response对象', (res as any).response)
-        const { status, data } = res
+        const { status, data, statusText } = res
         // 接口响应成功 且status == 200
         if (status === 200) {
           if (data.code === '-1001') {
@@ -70,7 +70,7 @@ class Http {
           if (data.code !== 0) {
             ElMessage({
               type: 'error',
-              message: res.data.message
+              message: data
             })
             return Promise.reject(res)
           }
@@ -79,7 +79,7 @@ class Http {
           // status !== 200的情况
           ElMessage({
             type: 'error',
-            message: `请求失败:${status}${res}`
+            message: `status!==200:${status}${statusText}`
           })
           return Promise.reject(res)
         }

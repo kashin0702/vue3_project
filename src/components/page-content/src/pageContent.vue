@@ -109,7 +109,8 @@ export default defineComponent({
       currentPage: 1
     })
     // 监听分页改变事件 update:pageInfo 触发getPageData刷新页面
-    watch(pageInfo, () => {
+    watch(pageInfo, (newVal) => {
+      console.log('pageInfo新值', newVal)
       getPageData()
     })
 

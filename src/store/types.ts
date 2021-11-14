@@ -1,6 +1,6 @@
 import { LoginState } from './login/types'
 import { SystemState } from './main/system/types'
-
+import { DashBoardState } from './main/analysis/types'
 export interface RootState {
   name: string
   password: number
@@ -13,7 +13,8 @@ export interface RootState {
 export interface RootWithModule {
   // 登录模块
   login: LoginState
-  systemModule: SystemState
+  system: SystemState
+  dashboard: DashBoardState
 }
 
 // 交叉类型
